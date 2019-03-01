@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.dao.UserDao">
+
+<select id="findUserByUserId" parameterType="String" resultType="com.demo.pojo.User">
+	select * from user_t t where t.user_id = #{id}
+</select>
+<update id="updateUsername" parameterType="com.demo.pojo.User">
+	update user_t t set t.username = "haha" where t.user_id = 1
+</update>
+
+<select id="findUserByUsername" resultType="com.demo.pojo.User">
+	select * from user_t t where t.username = #{username}
+</select>
+
+<select id="findRolesByUsername" parameterType="String" resultType="java.lang.String">
+	select r.role from role_t r,user_role_t ur, user_t u where r.role_id = ur.role_id and ur.user_id = u.user_id and u.username = #{username}
+</select>
+
+<select id="findPermissionsByUsername" resultType="java.lang.String">
+	select p.permission from role_t r,user_role_t ur, user_t u, permission_t p, role_permission_t rp where r.role_id = ur.role_id and ur.user_id = u.user_id and r.role_id = rp.role_id and rp.permission_id = p.permission_id and u.username  = #{username}
+</select>
+
+<insert id="insertUserInfo" parameterType="com.demo.pojo.User">
+	<selectKey resultType="java.math.BigDecimal" order="BEFORE" keyProperty="id">
+		selet squence.nextval as userId from dual
+	</selectKey>
+	insert into user_t(id, username) values(#{userId}, #{username})
+</insert>
+</mapper>
